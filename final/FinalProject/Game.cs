@@ -5,6 +5,13 @@ namespace RetroShooter.Game
 {
     public class Game
     {
+        public static void Main(string[] args)
+        {
+            // Create a new Game object and start the game
+            Game game = new Game();
+            game.Start();
+        }
+        
         public RetroShooter.Player.Player Player { get; set; }
         public List<RetroShooter.Enemy.Enemy> Enemies { get; set; }
         public List<RetroShooter.Bullet.Bullet> Bullets { get; set; }
@@ -15,13 +22,21 @@ namespace RetroShooter.Game
 
         private Random random = new Random();
 
-      
+        public void Shoot()
+        {
+            // Instantiate a bullet at the player's position and add it to the Bullets list
+            RetroShooter.Bullet.Bullet bullet = new RetroShooter.Bullet.Bullet();
+            bullet.X = Player.X;
+            bullet.Y = Player.Y - 1;
+            Bullets.Add(bullet);
+        }
 
+        
 
         public Game()
         {
             // Initialize other game objects here
-            Player = new RetroShooter.Player.Player();
+            Player = new RetroShooter.Player.Player(this);
             Player.Lives = 3;
 
             Enemies = new List<RetroShooter.Enemy.Enemy>();
@@ -38,7 +53,7 @@ namespace RetroShooter.Game
 
             RetroShooter.Enemy.Enemy enemy = new RetroShooter.Enemy.Enemy(this);
             Enemies.Add(enemy);
-
+                       
         }
 
         public void Start()
@@ -64,30 +79,30 @@ namespace RetroShooter.Game
             // Move the player based on user input
             if (Console.KeyAvailable)
             {
-                // Move the player based on user input
-                if (Console.KeyAvailable)
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                switch (keyInfo.Key)
                 {
-                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                    switch (keyInfo.Key)
-                    {
-                        case ConsoleKey.LeftArrow:
-                            Player.X = Math.Max(0, Player.X - 1);
-                            break;
-                        case ConsoleKey.RightArrow:
-                            Player.X = Math.Min(Console.WindowWidth - 1, Player.X + 1);
-                            break;
-                        case ConsoleKey.UpArrow:
-                            Player.Y = Math.Max(0, Player.Y - 1);
-                            break;
-                        case ConsoleKey.DownArrow:
-                            Player.Y = Math.Min(Console.WindowHeight - 1, Player.Y + 1);
-                            break;
-                    }
-                }
+                    case ConsoleKey.LeftArrow:
+                        Player.X = Math.Max(0, Player.X - 1);
+                        break;
+                    case ConsoleKey.RightArrow:
+                        Player.X = Math.Min(Console.WindowWidth - 1, Player.X + 1);
+                        break;
+                    case ConsoleKey.UpArrow:
+                        Player.Y = Math.Max(0, Player.Y - 1);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        Player.Y = Math.Min(Console.WindowHeight - 1, Player.Y + 1);
+                        break;
+                    case ConsoleKey.Spacebar:
 
+                    
+                        // Shoot a bullet when the spacebar is pressed
+                        Shoot();
+                        break;
+                }
             }
 
-            
             // Move the enemies
             foreach (var enemy in Enemies)
             {
@@ -107,13 +122,13 @@ namespace RetroShooter.Game
                     Bullets.RemoveAt(i);
                 }
             }
-            
+
             // Move the upgrades
             for (int i = Upgrades.Count - 1; i >= 0; i--)
             {
                 RetroShooter.Upgrade.Upgrade upgrade = Upgrades[i];
                 upgrade.Y += 1;
-                if (upgrade.Y >= Console.WindowHeight)
+                if (upgrade.Y > Console.WindowHeight - 1)
                 {
                     // Upgrade has moved off the bottom of the screen
                     // Remove it from the game
@@ -147,24 +162,9 @@ namespace RetroShooter.Game
                 enemy.Y = 0;
                 Enemies.Add(enemy);
             }
-
-            // Spawn new power-ups at random intervals
-            if (random.NextDouble() < 0.01)
-            {
-                RetroShooter.Upgrade.Upgrade upgrade = new RetroShooter.Upgrade.Upgrade("someType", 42);
-                upgrade.X = random.Next(0, Console.WindowWidth);
-                upgrade.Y = 0;
-                Upgrades.Add(upgrade);
-            }
-        }
-
-        public static void Main(string[] args)
-        {
-            Game game = new Game();
-            game.Start();
         }
     }
-}
+}        
 
 
 

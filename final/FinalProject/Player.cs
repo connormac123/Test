@@ -1,18 +1,21 @@
-using System;
-
 namespace RetroShooter.Player
 {
     public class Player
     {
+        // Add a reference to the Game object
+        private RetroShooter.Game.Game game;
+
         public int Health { get; set; }
         public int Damage { get; set; }
         public int Speed { get; set; }
         public int Lives { get; set; }
-        public int X { get; set; } // Add this
-        public int Y { get; set; } // Add this
+        public int X { get; set; }
+        public int Y { get; set; }
 
-        public Player()
+        // Add a constructor that takes a Game object as a parameter
+        public Player(RetroShooter.Game.Game game)
         {
+            this.game = game;
             // Initialize player attributes here
         }
 
@@ -25,7 +28,9 @@ namespace RetroShooter.Player
 
         public void Shoot()
         {
-            // Player shooting logic here
+            // Call the Shoot method on the Game object
+            game.Shoot();
         }
     }
 }
+
