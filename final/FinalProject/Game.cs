@@ -22,6 +22,17 @@ namespace RetroShooter.Game
 
         private Random random = new Random();
 
+        public static void Main(string[] args)
+        {
+            // Create a new Game object and start the game
+            
+
+            Game game = new Game();
+            game.Start();
+        }
+        
+        
+
         public void Shoot()
         {
             // Instantiate a bullet at the player's position and add it to the Bullets list
@@ -56,6 +67,30 @@ namespace RetroShooter.Game
                        
         }
 
+        public void ShowStartMenu()
+        {
+            {
+                // Clear the console
+                Console.Clear();
+
+                // Display the start menu title with an animation effect
+                string title = "Retro Shooter";
+                for (int i = 0; i < title.Length; i++)
+                {
+                    Console.Write(title[i]);
+                    System.Threading.Thread.Sleep(100);
+                }
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("Press Enter to start");
+
+                // Wait for the user to press Enter
+                while (Console.ReadKey(true).Key != ConsoleKey.Enter)
+                {
+                    // Do nothing
+                }
+            }
+        }
         public void Start()
         {
             // Start the game here
@@ -158,6 +193,14 @@ namespace RetroShooter.Game
             if (random.NextDouble() < 0.05)
             {
                 RetroShooter.Enemy.Enemy enemy = new RetroShooter.Enemy.Enemy(this);
+
+                // Set the enemy's initial position to the center of the screen
+                enemy.X = Console.WindowWidth / 2;
+                enemy.Y = 0;
+
+                // Ensure that the enemy is separated from the player
+                while (Math.Abs(enemy.X - Player.X) < 5)
+                {
                 enemy.X = random.Next(0, Console.WindowWidth);
                 enemy.Y = 0;
                 Enemies.Add(enemy);
